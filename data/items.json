@@ -8,7 +8,7 @@
     { "id": "food", "name": "Food waste caddy", "accepts": "Food and certain food-soiled items as set by your council", "status": "draft" }
   ],
   "items": [
-    { "id": "coffee-cup-paper", "name": "Paper coffee cup", "bin": "general", "reason": "Plastic lining makes it hard to recycle in most areas.", "status": "draft", "source": "TBC" },
+    { "id": "coffee-cup-paper", "name": "Paper coffee cup", "bin": "general", "reason": " The plastic lining makes it hard to recycle in most areas.", "status": "draft", "source": "TBC" },
     { "id": "pizza-box-greasy", "name": "Greasy pizza box", "bin": "food", "reason": "Grease and food contamination stop it being recycled; the clean lid can usually go in dry recycling.", "status": "draft", "source": "TBC" },
     { "id": "yoghurt-pot", "name": "Plastic yoghurt pot", "bin": "recycling", "reason": "Rinse first. Check your council, as some plastic types are not accepted.", "status": "draft", "source": "TBC" },
     { "id": "glass-jar", "name": "Glass jar", "bin": "recycling", "reason": "Rinse and remove the lid. Glass is usually accepted in dry recycling.", "status": "draft", "source": "TBC" },
