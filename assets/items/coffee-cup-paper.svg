@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-hidden="true">
+  <ellipse cx="100" cy="176" rx="46" ry="8" fill="#0002"/>
+  <path d="M58 70 L142 70 L130 170 Q129 176 122 176 L78 176 Q71 176 70 170 Z" fill="#f4e6d0" stroke="#7a5230" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M70 110 L130 110 L129 150 L71 150 Z" fill="#c8542e"/>
+  <text x="100" y="138" font-family="sans-serif" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">COFFEE</text>
+  <rect x="52" y="56" width="96" height="16" rx="6" fill="#e9d7b8" stroke="#7a5230" stroke-width="4"/>
+  <path d="M96 56 Q100 40 114 36" fill="none" stroke="#7a5230" stroke-width="4" stroke-linecap="round"/>
+</svg>

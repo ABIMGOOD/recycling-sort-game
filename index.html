@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Sort everyday items into the right bin, using Coventry City Council's rules.">
+  <meta name="color-scheme" content="light dark">
+  <title>Recycling Sort Game (Coventry)</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Recycling Sort</h1>
+    <p class="region">Coventry rules</p>
+    <div class="stats" aria-live="polite">
+      <span>Score <strong id="score">0</strong></span>
+      <span>Streak <strong id="streak">0</strong></span>
+    </div>
+  </header>
+
+  <main id="game">
+    <p id="loading" class="muted">Loading items...</p>
+    <p id="load-error" class="error" hidden></p>
+
+    <section id="play" hidden aria-label="Sorting game">
+      <p class="hint" id="hint">Drag the item into a bin, or tap it and then tap a bin.</p>
+
+      <div class="card-area">
+        <button id="item" class="item-card" type="button" aria-pressed="false">
+          <img id="item-img" alt="" width="160" height="160">
+          <span id="item-name" class="item-name"></span>
+        </button>
+      </div>
+
+      <div class="bins" role="group" aria-label="Bins">
+        <button class="bin" type="button" data-bin="general"><span class="lid lid-general" aria-hidden="true"></span><span class="bin-name">General waste</span><span class="bin-sub">Green lid</span></button>
+        <button class="bin" type="button" data-bin="recycling"><span class="lid lid-recycling" aria-hidden="true"></span><span class="bin-name">Recycling</span><span class="bin-sub">Blue lid</span></button>
+        <button class="bin" type="button" data-bin="food"><span class="lid lid-food" aria-hidden="true"></span><span class="bin-name">Food waste</span><span class="bin-sub">Caddy / brown</span></button>
+        <button class="bin" type="button" data-bin="drop_off"><span class="lid lid-drop" aria-hidden="true"></span><span class="bin-name">Drop-off</span><span class="bin-sub">Tip or shop</span></button>
+      </div>
+    </section>
+
+    <section id="feedback" class="feedback" hidden aria-live="assertive">
+      <h2 id="fb-title"></h2>
+      <p id="fb-bin"></p>
+      <p id="fb-reason"></p>
+      <p class="muted"><a id="fb-source" href="https://www.coventry.gov.uk/rubbish-recycling" target="_blank" rel="noopener">Coventry City Council rules</a></p>
+      <button id="next" class="primary" type="button">Next item</button>
+    </section>
+
+    <section id="end" class="end" hidden aria-live="polite">
+      <h2>Round complete</h2>
+      <p id="end-score"></p>
+      <button id="again" class="primary" type="button">Play again</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Based on Coventry City Council guidance, checked 19 Nov 2026. Rules change, so check the council before you act on a specific item.</p>
+  </footer>
+
+  <script src="js/game.js" defer></script>
+</body>
+</html>

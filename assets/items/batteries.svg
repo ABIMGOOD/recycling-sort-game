@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-hidden="true">
+  <ellipse cx="100" cy="168" rx="70" ry="8" fill="#0002"/>
+  <g transform="rotate(-18 70 100)">
+    <rect x="40" y="82" width="62" height="36" rx="6" fill="#5a6572" stroke="#2c3440" stroke-width="3"/>
+    <rect x="100" y="92" width="8" height="16" rx="2" fill="#2c3440"/>
+    <rect x="48" y="90" width="20" height="20" rx="3" fill="#c0c7d0" opacity=".5"/>
+    <text x="72" y="107" font-family="sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">AA</text>
+  </g>
+  <g transform="rotate(12 130 110)">
+    <rect x="98" y="92" width="62" height="36" rx="6" fill="#5a6572" stroke="#2c3440" stroke-width="3"/>
+    <rect x="160" y="102" width="8" height="16" rx="2" fill="#2c3440"/>
+    <rect x="106" y="100" width="20" height="20" rx="3" fill="#c0c7d0" opacity=".5"/>
+    <text x="130" y="117" font-family="sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">AA</text>
+  </g>
+</svg>
