@@ -1,17 +1,94 @@
 {
-  "version": 0,
-  "region": "England",
-  "note": "All entries are drafts until checked against the sources listed. Bin rules vary by council during Simpler Recycling rollout.",
+  "version": 2,
+  "region": "Coventry",
+  "council": "Coventry City Council",
+  "note": "Source: Coventry City Council rubbish and recycling pages (coventry.gov.uk), checked 19 Nov 2026. Council rules can change; check the council before relying on this for a decision. Status: verified = stated on the council page; needs_check = not stated, so check the council.",
   "bins": [
-    { "id": "general", "name": "General waste (black or grey bin)", "accepts": "Items that cannot be recycled or composted", "status": "draft" },
-    { "id": "recycling", "name": "Dry recycling", "accepts": "Clean paper, card, plastic, metal and glass as set by your council", "status": "draft" },
-    { "id": "food", "name": "Food waste caddy", "accepts": "Food and certain food-soiled items as set by your council", "status": "draft" }
+    {
+      "id": "general",
+      "name": "General waste (green-lidded bin, fortnightly)",
+      "accepts": "Black bags, general waste, nappies, cling film, plant pots, broken ceramics, drinking glasses, shredded paper. Not batteries, vapes or electrical items.",
+      "status": "verified"
+    },
+    {
+      "id": "recycling",
+      "name": "Recycling (blue-lidded bin, fortnightly)",
+      "accepts": "Cans, glass bottles and jars, paper, card, cartons, plastic milk bottles, cleaning bottles, plastic trays, yoghurt pots. No bags or film.",
+      "status": "verified"
+    },
+    {
+      "id": "food",
+      "name": "Food waste (caddy, weekly)",
+      "accepts": "Food including meat, bones, dairy, peelings and teabags. No liquids, packaging or plastic bags.",
+      "status": "verified"
+    },
+    {
+      "id": "drop_off",
+      "name": "Drop-off point (tip or retailer)",
+      "accepts": "Batteries and car batteries (retailers or tip), hard plastic trays (tip), and other items the council says to take to the tip",
+      "status": "verified"
+    }
   ],
   "items": [
-    { "id": "coffee-cup-paper", "name": "Paper coffee cup", "bin": "general", "reason": " The plastic lining makes it hard to recycle in most areas.", "status": "draft", "source": "TBC" },
-    { "id": "pizza-box-greasy", "name": "Greasy pizza box", "bin": "food", "reason": "Grease and food contamination stop it being recycled; the clean lid can usually go in dry recycling.", "status": "draft", "source": "TBC" },
-    { "id": "yoghurt-pot", "name": "Plastic yoghurt pot", "bin": "recycling", "reason": "Rinse first. Check your council, as some plastic types are not accepted.", "status": "draft", "source": "TBC" },
-    { "id": "glass-jar", "name": "Glass jar", "bin": "recycling", "reason": "Rinse and remove the lid. Glass is usually accepted in dry recycling.", "status": "draft", "source": "TBC" },
-    { "id": "batteries", "name": "Batteries", "bin": "general", "reason": "Do not put batteries in household bins. Take them to a collection point or shop with a battery bin.", "status": "draft", "source": "TBC" }
+    {
+      "id": "coffee-cup-paper",
+      "name": "Paper coffee cup",
+      "bin": "general",
+      "reason": "Drinks cups cannot currently be recycled in Coventry, so they go in the green-lidded general waste bin.",
+      "status": "verified",
+      "source": "https://www.coventry.gov.uk/recyclingaz"
+    },
+    {
+      "id": "pizza-box-greasy",
+      "name": "Greasy pizza box",
+      "bin": "general",
+      "reason": "Boxes contaminated with pizza or grease cannot be recycled in Coventry. Put them in the green-lidded general waste bin.",
+      "status": "verified",
+      "source": "https://www.coventry.gov.uk/recyclingaz"
+    },
+    {
+      "id": "yoghurt-pot",
+      "name": "Plastic yoghurt pot",
+      "bin": "recycling",
+      "reason": "Wash it first, then put it in the blue-lidded recycling bin.",
+      "status": "verified",
+      "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print"
+    },
+    {
+      "id": "glass-jar",
+      "name": "Glass jar",
+      "bin": "recycling",
+      "reason": "Glass goes in the blue-lidded recycling bin. The council page does not give rinsing or lid rules for glass jars, so rinse and empty them as a precaution.",
+      "status": "verified",
+      "source": "https://www.coventry.gov.uk/recyclingaz"
+    },
+    {
+      "id": "batteries",
+      "name": "Batteries",
+      "bin": "drop_off",
+      "reason": "Batteries are not allowed in any household bin in Coventry. Take them to a retailer collection point or the tip.",
+      "status": "verified",
+      "source": "https://www.coventry.gov.uk/recyclingaz"
+    },
+    {
+      "id": "clean-pizza-box",
+      "name": "Clean pizza box",
+      "bin": "unknown",
+      "reason": "The council page does not say which bin a clean pizza box goes in. Check the Coventry council site or the Your Rubbish app.",
+      "status": "needs_check",
+      "source": "https://www.coventry.gov.uk/recyclingaz"
+    },
+    {
+      "id": "plastic-tub",
+      "name": "Plastic tub (not yoghurt pot)",
+      "bin": "unknown",
+      "reason": "The council page does not list plastic tubs separately. Check the Coventry council site or the Your Rubbish app.",
+      "status": "needs_check",
+      "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print"
+    }
+  ],
+  "conflicts_to_resolve": [
+    "Food waste: the household bins page says food goes in a caddy (weekly) and the A-Z page says food goes in the brown-lidded bin. Likely the caddy is emptied into the brown bin, but confirm.",
+    "Hard plastic trays: the household bins page lists plastic trays for the blue bin, while the A-Z page says hard plastic trays go to the tip. Confirm before using."
   ]
 }
