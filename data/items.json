@@ -1,94 +1,166 @@
 {
-  "version": 2,
+  "version": 3,
   "region": "Coventry",
-  "council": "Coventry City Council",
-  "note": "Source: Coventry City Council rubbish and recycling pages (coventry.gov.uk), checked 19 Nov 2026. Council rules can change; check the council before relying on this for a decision. Status: verified = stated on the council page; needs_check = not stated, so check the council.",
-  "bins": [
-    {
-      "id": "general",
-      "name": "General waste (green-lidded bin, fortnightly)",
-      "accepts": "Black bags, general waste, nappies, cling film, plant pots, broken ceramics, drinking glasses, shredded paper. Not batteries, vapes or electrical items.",
-      "status": "verified"
+  "note": "Two systems. home = Coventry City Council kerbside collection (checked 19 Nov 2026 on coventry.gov.uk). halls = Coventry University student accommodation (accommodation.coventry.ac.uk). Only status 'verified' rules appear in the game. 'needs_check' means the source does not settle it. Rules change, so check your local system before acting on a specific item.",
+  "systems": {
+    "home": {
+      "name": "Coventry home (kerbside)",
+      "bins": [
+        { "id": "general", "name": "General waste", "sub": "Green lid, fortnightly", "color": "#3d8b4f", "text": "#ffffff" },
+        { "id": "recycling", "name": "Recycling", "sub": "Blue lid, fortnightly", "color": "#2f6fb0", "text": "#ffffff" },
+        { "id": "food", "name": "Food waste", "sub": "Caddy, weekly", "color": "#7a4f2b", "text": "#ffffff" },
+        { "id": "drop_off", "name": "Drop-off", "sub": "Tip, shop or supermarket", "color": "#5a6572", "text": "#ffffff" }
+      ]
     },
-    {
-      "id": "recycling",
-      "name": "Recycling (blue-lidded bin, fortnightly)",
-      "accepts": "Cans, glass bottles and jars, paper, card, cartons, plastic milk bottles, cleaning bottles, plastic trays, yoghurt pots. No bags or film.",
-      "status": "verified"
-    },
-    {
-      "id": "food",
-      "name": "Food waste (caddy, weekly)",
-      "accepts": "Food including meat, bones, dairy, peelings and teabags. No liquids, packaging or plastic bags.",
-      "status": "verified"
-    },
-    {
-      "id": "drop_off",
-      "name": "Drop-off point (tip or retailer)",
-      "accepts": "Batteries and car batteries (retailers or tip), hard plastic trays (tip), and other items the council says to take to the tip",
-      "status": "verified"
+    "halls": {
+      "name": "Student halls (indoor bins)",
+      "bins": [
+        { "id": "general", "name": "General waste", "sub": "Black bin", "color": "#1f1f1f", "text": "#ffffff", "color_status": "confirmed by user, 19 Nov 2026" },
+        { "id": "recycling", "name": "Recycling", "sub": "Lime green bin", "color": "#84cc16", "text": "#1d1d1b", "color_status": "confirmed by user, 19 Nov 2026" },
+        { "id": "food", "name": "Food waste", "sub": "Small caddy", "color": "#8a6a3a", "text": "#ffffff", "color_status": "placeholder, to confirm" }
+      ]
     }
-  ],
+  },
   "items": [
     {
-      "id": "coffee-cup-paper",
-      "name": "Paper coffee cup",
-      "bin": "general",
-      "reason": "Drinks cups cannot currently be recycled in Coventry, so they go in the green-lidded general waste bin.",
-      "status": "verified",
-      "source": "https://www.coventry.gov.uk/recyclingaz"
+      "id": "coffee-cup-paper", "name": "Paper coffee cup",
+      "rules": {
+        "home": { "bin": "general", "status": "verified", "reason": "Drinks cups can't currently be recycled in Coventry, so they go in the green-lidded general waste bin.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "needs_check", "reason": "The university page doesn't mention coffee cups. Check with your halls team.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     },
     {
-      "id": "pizza-box-greasy",
-      "name": "Greasy pizza box",
-      "bin": "general",
-      "reason": "Boxes contaminated with pizza or grease cannot be recycled in Coventry. Put them in the green-lidded general waste bin.",
-      "status": "verified",
-      "source": "https://www.coventry.gov.uk/recyclingaz"
+      "id": "pizza-box-greasy", "name": "Greasy pizza box",
+      "rules": {
+        "home": { "bin": "general", "status": "verified", "reason": "Boxes contaminated with pizza or grease can't be recycled in Coventry, so they go in general waste.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "needs_check", "reason": "The halls page says cardboard, including pizza boxes, should be clean and dry, but doesn't say what to do with greasy ones. Check with your halls team.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     },
     {
-      "id": "yoghurt-pot",
-      "name": "Plastic yoghurt pot",
-      "bin": "recycling",
-      "reason": "Wash it first, then put it in the blue-lidded recycling bin.",
-      "status": "verified",
-      "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print"
+      "id": "pizza-box-clean", "name": "Clean pizza box",
+      "rules": {
+        "home": { "bin": "general", "status": "needs_check", "reason": "The council page doesn't say where a clean pizza box goes. Check the council site or the Your Rubbish app.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Cardboard, including pizza boxes, goes in the recycling bin, as long as it is clean and dry.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     },
     {
-      "id": "glass-jar",
-      "name": "Glass jar",
-      "bin": "recycling",
-      "reason": "Glass goes in the blue-lidded recycling bin. The council page does not give rinsing or lid rules for glass jars, so rinse and empty them as a precaution.",
-      "status": "verified",
-      "source": "https://www.coventry.gov.uk/recyclingaz"
+      "id": "yoghurt-pot", "name": "Plastic yoghurt pot",
+      "rules": {
+        "home": { "bin": "recycling", "status": "verified", "reason": "Wash it first, then put it in the blue-lidded recycling bin.", "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print" },
+        "halls": { "bin": "recycling", "status": "needs_check", "reason": "The halls page lists plastic bottles and trays, but not yoghurt pots. Check with your halls team.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     },
     {
-      "id": "batteries",
-      "name": "Batteries",
-      "bin": "drop_off",
-      "reason": "Batteries are not allowed in any household bin in Coventry. Take them to a retailer collection point or the tip.",
-      "status": "verified",
-      "source": "https://www.coventry.gov.uk/recyclingaz"
+      "id": "glass-jar", "name": "Glass jar",
+      "rules": {
+        "home": { "bin": "recycling", "status": "verified", "reason": "Glass goes in the blue-lidded recycling bin. The council gives no rinse rule for jars, so rinse as a precaution.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Glass jars and bottles go in the recycling bin. Rinse them first to avoid smells and contamination.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     },
     {
-      "id": "clean-pizza-box",
-      "name": "Clean pizza box",
-      "bin": "unknown",
-      "reason": "The council page does not say which bin a clean pizza box goes in. Check the Coventry council site or the Your Rubbish app.",
-      "status": "needs_check",
-      "source": "https://www.coventry.gov.uk/recyclingaz"
+      "id": "batteries", "name": "Batteries",
+      "rules": {
+        "home": { "bin": "drop_off", "status": "verified", "reason": "Not allowed in any household bin. Take them to a retailer collection point or the tip.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "drop_off", "status": "needs_check", "reason": "The university page doesn't mention batteries. Check with your halls team.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     },
     {
-      "id": "plastic-tub",
-      "name": "Plastic tub (not yoghurt pot)",
-      "bin": "unknown",
-      "reason": "The council page does not list plastic tubs separately. Check the Coventry council site or the Your Rubbish app.",
-      "status": "needs_check",
-      "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print"
+      "id": "kitchen-roll", "name": "Used kitchen roll",
+      "rules": {
+        "home": { "bin": "general", "status": "verified", "reason": "Kitchen roll goes in the green-lidded general waste bin, or in home compost if you have it.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "needs_check", "reason": "The halls page doesn't mention kitchen roll. It lists napkins as general waste, so it probably goes there too. Confirm with your halls team.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "cereal-box", "name": "Cereal box",
+      "rules": {
+        "home": { "bin": "recycling", "status": "verified", "reason": "Flatten it, then put it in the blue-lidded recycling bin.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Cardboard goes in the recycling bin, as long as it is clean and dry.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "cans", "name": "Food and drink can",
+      "rules": {
+        "home": { "bin": "recycling", "status": "verified", "reason": "Wash and squash it, then put it in the blue-lidded recycling bin.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Cans and tins go in the recycling bin, as long as they are clean and dry.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "plastic-bottle", "name": "Plastic drinks bottle",
+      "rules": {
+        "home": { "bin": "recycling", "status": "verified", "reason": "Wash and squash it first, then put it in the blue-lidded recycling bin.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Plastic bottles go in the recycling bin, as long as they are clean and dry.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "cling-film", "name": "Cling film",
+      "rules": {
+        "home": { "bin": "general", "status": "verified", "reason": "Cling film can't be recycled because it tangles sorting machinery, so it goes in general waste.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "verified", "reason": "Plastic film goes in the general waste bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "crisp-packet", "name": "Crisp packet",
+      "rules": {
+        "home": { "bin": "general", "status": "verified", "reason": "Crisp packets go in general waste. Some city collection points, including The Hub on Jordan Well and Coventry University, send them for recycling.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "verified", "reason": "Crisp packets go in the general waste bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "carrier-bag", "name": "Plastic carrier bag",
+      "rules": {
+        "home": { "bin": "drop_off", "status": "verified", "reason": "Plastic bags can't go in the blue or brown bins. Use supermarket bag recycling, or reuse them.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "verified", "reason": "Plastic bags go in the general waste bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "bubble-wrap", "name": "Bubble wrap",
+      "rules": {
+        "home": { "bin": "general", "status": "needs_check", "reason": "The council says bubble wrap can't currently be recycled, but doesn't name a bin. Check the council before deciding.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "general", "status": "verified", "reason": "Bubblewrap goes in the general waste bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "food-peelings", "name": "Fruit and vegetable peelings",
+      "rules": {
+        "home": { "bin": "food", "status": "verified", "reason": "Fruit and vegetable peelings go in the food waste caddy.", "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print" },
+        "halls": { "bin": "food", "status": "verified", "reason": "Peels and plate scrapings go in the food waste bin, not the general bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "tea-bag", "name": "Used tea bag",
+      "rules": {
+        "home": { "bin": "food", "status": "verified", "reason": "Teabags go in the food waste caddy.", "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print" },
+        "halls": { "bin": "food", "status": "verified", "reason": "Teabags and coffee grounds go in the food waste bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "bones", "name": "Meat bones",
+      "rules": {
+        "home": { "bin": "food", "status": "verified", "reason": "Meat and fish, including bones, go in the food waste caddy.", "source": "https://www.coventry.gov.uk/rubbish-recycling/household-bins/print" },
+        "halls": { "bin": "food", "status": "verified", "reason": "Bones go in the food waste bin.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "plastic-tray", "name": "Hard plastic tray",
+      "rules": {
+        "home": { "bin": "drop_off", "status": "needs_check", "reason": "The council pages disagree on hard plastic trays: one says the blue bin, the other says the tip. Check the council before deciding.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Plastic trays go in the recycling bin, as long as they are clean and dry.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "vape", "name": "Disposable vape",
+      "rules": {
+        "home": { "bin": "drop_off", "status": "verified", "reason": "Vapes go to the tip, not in household bins.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "drop_off", "status": "needs_check", "reason": "The university page doesn't mention vapes. Check with your halls team.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
+    },
+    {
+      "id": "cardboard-box", "name": "Cardboard box",
+      "rules": {
+        "home": { "bin": "recycling", "status": "verified", "reason": "Flatten it, remove staples, and put it in the blue-lidded recycling bin.", "source": "https://www.coventry.gov.uk/recyclingaz" },
+        "halls": { "bin": "recycling", "status": "verified", "reason": "Cardboard goes in the recycling bin, as long as it is clean and dry. Flatten it first.", "source": "https://accommodation.coventry.ac.uk/story/40321145/recycling-whilst-living-in-student-accommodation" }
+      }
     }
-  ],
-  "conflicts_to_resolve": [
-    "Food waste: the household bins page says food goes in a caddy (weekly) and the A-Z page says food goes in the brown-lidded bin. Likely the caddy is emptied into the brown bin, but confirm.",
-    "Hard plastic trays: the household bins page lists plastic trays for the blue bin, while the A-Z page says hard plastic trays go to the tip. Confirm before using."
   ]
 }

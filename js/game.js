@@ -2,13 +2,24 @@
   'use strict';
 
   const $ = (id) => document.getElementById(id);
+  const ROUND_SIZE = 5;
+  const STORE_KEY = 'recyclingSort.system';
 
   const els = {
+    systemLabel: $('system-label'),
+    stats: $('stats'),
+    score: $('score'),
+    streak: $('streak'),
+    loading: $('loading'),
+    loadError: $('load-error'),
+    setup: $('setup'),
     play: $('play'),
+    progress: $('progress'),
+    hint: $('hint'),
     item: $('item'),
     img: $('item-img'),
     name: $('item-name'),
-    hint: $('hint'),
+    bins: $('bins'),
     feedback: $('feedback'),
     fbTitle: $('fb-title'),
     fbBin: $('fb-bin'),
@@ -17,24 +28,15 @@
     next: $('next'),
     end: $('end'),
     endScore: $('end-score'),
+    endNote: $('end-note'),
     again: $('again'),
-    loading: $('loading'),
-    loadError: $('load-error'),
-    score: $('score'),
-    streak: $('streak'),
+    switch: $('switch'),
+    switchEnd: $('switch-end'),
   };
 
-  const bins = Array.from(document.querySelectorAll('.bin'));
-
-  // Human-readable names, matching the bin buttons in index.html.
-  const BIN_NAMES = {
-    general: 'General waste (green lid)',
-    recycling: 'Recycling (blue lid)',
-    food: 'Food waste (caddy / brown bin)',
-    drop_off: 'Drop-off point (tip or shop)',
-  };
-
-  let deck = [];
+  let data = null;
+  let system = null;      // 'home' or 'halls'
+  let queue = [];         // this round's items
   let index = 0;
   let score = 0;
   let streak = 0;
@@ -43,6 +45,15 @@
   let answered = false;
   let drag = null;
   let suppressClick = false;
+
+  // ---------- Storage (per device, optional) ----------
+
+  function readSaved() {
+    try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; }
+  }
+  function saveSystem(value) {
+    try { localStorage.setItem(STORE_KEY, value); } catch (e) { /* private mode: ignore */ }
+  }
 
   // ---------- Helpers ----------
 
@@ -55,9 +66,17 @@
     return a;
   }
 
-  function updateStats() {
-    els.score.textContent = score;
-    els.streak.textContent = streak;
+  function usableItems() {
+    return data.items.filter((i) => i.rules[system] && i.rules[system].status === 'verified');
+  }
+
+  function binConfig(binId) {
+    return data.systems[system].bins.find((b) => b.id === binId);
+  }
+
+  function binName(binId) {
+    const b = binConfig(binId);
+    return b ? b.name + ' (' + b.sub.toLowerCase() + ')' : binId;
   }
 
   function binAt(x, y) {
@@ -65,14 +84,80 @@
     return el ? el.closest('.bin') : null;
   }
 
-  function setHint(text) {
-    els.hint.textContent = text;
+  function allBins() {
+    return Array.from(els.bins.querySelectorAll('.bin'));
   }
 
-  // ---------- Game flow ----------
+  function setHint(text) { els.hint.textContent = text; }
+
+  function updateStats() {
+    els.score.textContent = score;
+    els.streak.textContent = streak;
+  }
+
+  // ---------- Screens ----------
+
+  function showSetup() {
+    els.setup.hidden = false;
+    els.play.hidden = true;
+    els.feedback.hidden = true;
+    els.end.hidden = true;
+    els.stats.hidden = true;
+    els.systemLabel.textContent = 'Choose where you live';
+  }
+
+  function renderBins() {
+    els.bins.innerHTML = '';
+    els.bins.dataset.count = String(data.systems[system].bins.length);
+    data.systems[system].bins.forEach((b) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bin';
+      btn.dataset.bin = b.id;
+      btn.style.setProperty('--lid', b.color);
+      btn.style.setProperty('--lid-text', b.text || '#ffffff');
+
+      const lid = document.createElement('span');
+      lid.className = 'lid';
+      lid.setAttribute('aria-hidden', 'true');
+
+      const name = document.createElement('span');
+      name.className = 'bin-name';
+      name.textContent = b.name;
+
+      const sub = document.createElement('span');
+      sub.className = 'bin-sub';
+      sub.textContent = b.sub;
+
+      btn.append(lid, name, sub);
+      btn.addEventListener('click', () => {
+        if (answered) return;
+        answer(b.id);
+      });
+      els.bins.appendChild(btn);
+    });
+  }
+
+  function startRound() {
+    queue = shuffle(usableItems()).slice(0, ROUND_SIZE);
+    index = 0;
+    score = 0;
+    streak = 0;
+    bestStreak = 0;
+    updateStats();
+
+    els.setup.hidden = true;
+    els.end.hidden = true;
+    els.stats.hidden = false;
+    els.play.hidden = false;
+    els.systemLabel.textContent = data.systems[system].name;
+
+    renderBins();
+    showItem();
+  }
 
   function showItem() {
-    const item = deck[index];
+    const item = queue[index];
     answered = false;
     selected = false;
 
@@ -85,7 +170,9 @@
     els.img.onerror = () => { els.img.hidden = true; };
     els.name.textContent = item.name;
 
-    bins.forEach((b) => {
+    els.progress.textContent = 'Question ' + (index + 1) + ' of ' + queue.length;
+
+    allBins().forEach((b) => {
       b.disabled = false;
       b.classList.remove('target', 'correct', 'wrong-pick');
     });
@@ -98,8 +185,9 @@
     if (answered) return;
     answered = true;
 
-    const item = deck[index];
-    const correct = binId === item.bin;
+    const item = queue[index];
+    const rule = item.rules[system];
+    const correct = binId === rule.bin;
 
     if (correct) {
       score += 1;
@@ -110,27 +198,28 @@
     }
     updateStats();
 
-    bins.forEach((b) => {
+    allBins().forEach((b) => {
       b.disabled = true;
       b.classList.remove('target');
-      if (b.dataset.bin === item.bin) b.classList.add('correct');
+      if (b.dataset.bin === rule.bin) b.classList.add('correct');
       else if (b.dataset.bin === binId) b.classList.add('wrong-pick');
     });
 
     els.feedback.dataset.result = correct ? 'correct' : 'wrong';
     els.fbTitle.textContent = correct ? 'Correct!' : 'Not quite';
     els.fbBin.textContent = correct
-      ? item.name + ' goes in the ' + BIN_NAMES[item.bin] + '.'
-      : 'You picked ' + BIN_NAMES[binId] + '. ' + item.name + ' goes in the ' + BIN_NAMES[item.bin] + '.';
-    els.fbReason.textContent = item.reason;
-    els.fbSource.href = item.source;
+      ? item.name + ' goes in: ' + binName(rule.bin) + '.'
+      : 'You picked ' + binName(binId) + '. ' + item.name + ' goes in: ' + binName(rule.bin) + '.';
+    els.fbReason.textContent = rule.reason;
+    els.fbSource.href = rule.source;
+    els.next.textContent = index + 1 < queue.length ? 'Next' : 'See results';
     els.feedback.hidden = false;
     els.next.focus();
   }
 
   function nextItem() {
     index += 1;
-    if (index >= deck.length) {
+    if (index >= queue.length) {
       showEnd();
     } else {
       showItem();
@@ -142,23 +231,13 @@
     els.feedback.hidden = true;
     els.end.hidden = false;
     els.endScore.textContent =
-      'You scored ' + score + ' out of ' + deck.length + '. Best streak: ' + bestStreak + '.';
+      'You scored ' + score + ' out of ' + queue.length + '. Best streak: ' + bestStreak + '.';
+    const pool = usableItems().length;
+    els.endNote.textContent = 'This round used ' + queue.length + ' of ' + pool + ' items for your setting.';
     els.again.focus();
   }
 
-  function start() {
-    deck = shuffle(deck);
-    index = 0;
-    score = 0;
-    streak = 0;
-    bestStreak = 0;
-    updateStats();
-    els.end.hidden = true;
-    els.play.hidden = false;
-    showItem();
-  }
-
-  // ---------- Drag and tap on the item ----------
+  // ---------- Drag and tap on the item card ----------
 
   els.item.addEventListener('pointerdown', (e) => {
     if (answered) return;
@@ -176,7 +255,7 @@
 
     els.item.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) rotate(' + (dx / 20) + 'deg)';
     const hover = binAt(e.clientX, e.clientY);
-    bins.forEach((b) => b.classList.toggle('target', b === hover));
+    allBins().forEach((b) => b.classList.toggle('target', b === hover));
   });
 
   function endDrag(e) {
@@ -186,7 +265,7 @@
 
     els.item.classList.remove('dragging');
     els.item.style.transform = '';
-    bins.forEach((b) => b.classList.remove('target'));
+    allBins().forEach((b) => b.classList.remove('target'));
 
     if (wasMoved) {
       suppressClick = true; // a drag should not also count as a tap
@@ -200,10 +279,10 @@
     drag = null;
     els.item.classList.remove('dragging');
     els.item.style.transform = '';
-    bins.forEach((b) => b.classList.remove('target'));
+    allBins().forEach((b) => b.classList.remove('target'));
   });
 
-  // Tap (or keyboard Enter/Space) selects the item.
+  // Tap or keyboard Enter/Space selects the item.
   els.item.addEventListener('click', () => {
     if (suppressClick) { suppressClick = false; return; }
     if (answered) return;
@@ -213,19 +292,22 @@
     setHint(selected ? 'Now tap the bin it goes in.' : 'Drag the item into a bin, or tap it and then tap a bin.');
   });
 
-  // ---------- Bins ----------
-
-  bins.forEach((b) => {
-    b.addEventListener('click', () => {
-      if (answered) return;
-      answer(b.dataset.bin);
-    });
-  });
-
   // ---------- Buttons ----------
 
+  function chooseSystem(value) {
+    system = value;
+    saveSystem(value);
+    startRound();
+  }
+
+  document.querySelectorAll('.choice').forEach((btn) => {
+    btn.addEventListener('click', () => chooseSystem(btn.dataset.system));
+  });
+
   els.next.addEventListener('click', nextItem);
-  els.again.addEventListener('click', start);
+  els.again.addEventListener('click', startRound);
+  els.switch.addEventListener('click', showSetup);
+  els.switchEnd.addEventListener('click', showSetup);
 
   // ---------- Load data ----------
 
@@ -233,15 +315,19 @@
     try {
       const res = await fetch('data/items.json', { cache: 'no-cache' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
+      data = await res.json();
 
-      // Only show items that are verified and have a known bin.
-      const usable = data.items.filter((i) => i.status === 'verified' && BIN_NAMES[i.bin]);
-      if (usable.length === 0) throw new Error('no verified items yet');
-
-      deck = usable;
       els.loading.hidden = true;
-      start();
+
+      const saved = readSaved();
+      if (saved && data.systems[saved]) {
+        system = saved;
+        if (usableItems().length) {
+          startRound();
+          return;
+        }
+      }
+      showSetup();
     } catch (err) {
       els.loading.hidden = true;
       els.loadError.hidden = false;

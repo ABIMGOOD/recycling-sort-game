@@ -107,6 +107,7 @@ main {
 .bin {
   background: var(--card);
   border: 2px solid var(--line);
+  border-left: 10px solid var(--lid, #888);
   border-radius: 16px;
   padding: 12px 10px 14px;
   min-height: 118px;
@@ -128,11 +129,8 @@ main {
 
 .lid {
   width: 56px; height: 14px; border-radius: 8px 8px 3px 3px; margin-bottom: 6px;
+  background: var(--lid, #888);
 }
-.lid-general { background: var(--general); }
-.lid-recycling { background: var(--recycling); }
-.lid-food { background: var(--food); }
-.lid-drop { background: var(--drop); }
 .bin-name { font-weight: 700; }
 .bin-sub { color: var(--muted); font-size: .85rem; }
 
@@ -181,3 +179,24 @@ button.primary:focus-visible { outline: 3px solid var(--ink); outline-offset: 3p
 @media (min-width: 720px) {
   .bins { grid-template-columns: repeat(4, 1fr); }
 }
+
+/* Setup, progress and switch controls */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-top: 8px; }
+.choices { display: grid; gap: 12px; margin-top: 12px; }
+.choice {
+  font: inherit; text-align: left; color: var(--ink);
+  background: var(--bg); border: 2px solid var(--line); border-radius: 14px;
+  padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
+}
+.choice span { color: var(--muted); font-size: .92rem; }
+.choice:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.progress { margin: 0 0 4px; font-weight: 700; color: var(--muted); font-size: .9rem; }
+.switch-row { text-align: center; margin-top: 12px; }
+button.link {
+  background: none; border: 0; color: var(--accent); font: inherit;
+  text-decoration: underline; cursor: pointer; padding: 6px;
+}
+.stats[hidden] { display: none !important; }
+
+/* Three bins (halls): make the last one span the row so it looks balanced */
+.bins[data-count="3"] .bin:last-child { grid-column: span 2; }
